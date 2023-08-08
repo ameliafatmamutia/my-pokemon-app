@@ -1,11 +1,19 @@
-import './App.css';
-import { BeakerIcon } from '@heroicons/react/24/solid'
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import "./App.css";
+import HomePage from "./pages/HomePage";
+import FavoriteList from "./pages/FavoriteList";
+import PokemonDetail from "./pages/PokemonDetail";
 
 function App() {
   return (
     <div>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
-      <BeakerIcon className="h-6 w-6 text-blue-500" />
+      <BrowserRouter>
+        <Routes>
+          <Route Component={HomePage} path="/" />
+          <Route Component={FavoriteList} path="/favorite" />
+          <Route Component={PokemonDetail} path="/pokemon/:name" />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
