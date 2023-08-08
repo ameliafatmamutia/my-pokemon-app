@@ -1,12 +1,43 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../component/navbar";
 import { useInfiniteQuery } from "react-query";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { EyeIcon, HeartIcon } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
+import { doc, getDoc, setDoc } from "@firebase/firestore";
+import { db } from "../utils/firebase";
 
-const CardComponent = ({ data }) => {
-    const navigate = useNavigate()
+const CardComponent = ({ data, isFavorite }) => {
+  const navigate = useNavigate();
+  const [tempIsFavorite, setTempIsFavorite] = useState(false);
+  const updateDoc = async (type) => {
+    const docRef = doc(db, "pokedex", "favoriteList");
+    const docSnap = await getDoc(docRef);
+    let favoriteName = docSnap.data().favoriteName;
+    const favoriteCount = docSnap.data().favoriteCount;
+
+    if (type === "like") {
+      await setDoc(docRef, {
+        favoriteName: [...favoriteName, data.name],
+        favoriteCount: favoriteCount + 1,
+      });
+      setTempIsFavorite(true);
+    }
+    if (type === "dislike") {
+      await setDoc(docRef, {
+        favoriteName: favoriteName.filter((nameData) => nameData !== data.name),
+        favoriteCount: favoriteCount - 1,
+      });
+      setTempIsFavorite(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isFavorite) {
+      setTempIsFavorite(isFavorite);
+    }
+  }, [isFavorite]);
+
   return (
     <div className="flex flex-col items-center p-4 rounded bg-customCard rounded-xl">
       <img src={data.image} alt={data.name} className="w-32 h-32 mb-4" />
@@ -15,10 +46,20 @@ const CardComponent = ({ data }) => {
       <div className="flex items-center">
         <div className="bg-customButton rounded-full">
           <button className="p-2 rounded-md">
-            <HeartIcon className="w-6 h-6 text-white" />
+            <HeartIcon
+              onClick={() => {
+                tempIsFavorite ? updateDoc("dislike") : updateDoc("like");
+              }}
+              className={`w-6 h-6 ${
+                tempIsFavorite ? "text-red-500" : "text-white"
+              } hover:text-red-300 hover:cursor-pointer`}
+            />
           </button>
           <button className="p-2 rounded-md">
-            <EyeIcon className="w-6 h-6 text-white hover:text-blue-300" onClick={() => navigate(`/pokemon/${data.name}`)}/>
+            <EyeIcon
+              className="w-6 h-6 text-white hover:text-blue-300"
+              onClick={() => navigate(`/pokemon/${data.name}`)}
+            />
           </button>
         </div>
       </div>
@@ -26,11 +67,44 @@ const CardComponent = ({ data }) => {
   );
 };
 
+const MemoizedCardComponent = React.memo(CardComponent);
+
 const PokemonList = ({ pokemonData }) => {
+  const [favoriteNameList, setFavoriteNameList] = useState([]);
+
+  const fetchFavorite = async () => {
+    const docRef = doc(db, "pokedex", "favoriteList");
+    const docSnap = await getDoc(docRef);
+
+    const favoriteName = docSnap.data().favoriteName;
+    setFavoriteNameList(favoriteName);
+  };
+
+  useEffect(() => {
+    fetchFavorite();
+  }, []);
+
+  const handleFavorite = (type, targetName) => {
+    if (type === "like") {
+      setFavoriteNameList([...favoriteNameList, targetName]);
+    }
+    if (type === "dislike") {
+      const newFavoriteList = favoriteNameList.filter(
+        (data) => data !== targetName
+      );
+      setFavoriteNameList(newFavoriteList);
+    }
+  };
+
   return (
     <div className="grid grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-3 sm:gap-x-6 sm:gap-y-8 lg:grid-cols-4 lg:gap-x-6">
       {pokemonData.map((data, index) => (
-        <CardComponent data={data} />
+        <MemoizedCardComponent
+          data={data}
+          isFavorite={favoriteNameList.includes(data.name)}
+          handleFavorite={handleFavorite}
+          key={`${data.name}-${index}`}
+        />
       ))}
     </div>
   );
@@ -76,8 +150,6 @@ function HomePage() {
   if (isError) {
     return <div>Error loading data</div>;
   }
-
-  console.log(data?.pages);
 
   return (
     <div className="bg-cyan-200 min-h-screen">

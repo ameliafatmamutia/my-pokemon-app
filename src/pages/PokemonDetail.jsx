@@ -1,13 +1,46 @@
 import React, { useEffect, useState } from "react";
-import { json, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../component/navbar";
 import { ChevronLeftIcon, HeartIcon } from "@heroicons/react/24/solid";
 import PercentageBar from "../component/percentageBar";
+import { db } from "../utils/firebase";
+import { doc, getDoc, setDoc } from "@firebase/firestore";
 
 function PokemonDetail() {
   const { name } = useParams();
   const navigate = useNavigate();
   const [pokeData, setPokeData] = useState({});
+  const [isFavorited, setIsFavorited] = useState(false);
+
+  const updateDoc = async (type) => {
+    const docRef = doc(db, "pokedex", "favoriteList");
+    const docSnap = await getDoc(docRef);
+    let favoriteName = docSnap.data().favoriteName;
+    const favoriteCount = docSnap.data().favoriteCount;
+
+    if (type === "like") {
+      await setDoc(docRef, {
+        favoriteName: [...favoriteName, name],
+        favoriteCount: favoriteCount + 1,
+      });
+    }
+    if (type === "dislike") {
+      await setDoc(docRef, {
+        favoriteName: favoriteName.filter((data) => data !== name),
+        favoriteCount: favoriteCount - 1,
+      });
+    }
+    fetchFavorite();
+  };
+
+  const fetchFavorite = async () => {
+    const docRef = doc(db, "pokedex", "favoriteList");
+    const docSnap = await getDoc(docRef);
+
+    const isFavorited = docSnap.data().favoriteName.includes(name);
+    console.log(docSnap.data().favoriteName, "fav name");
+    setIsFavorited(isFavorited);
+  };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const fetchPokemonDetail = async () => {
@@ -32,6 +65,7 @@ function PokemonDetail() {
   };
 
   useEffect(() => {
+    fetchFavorite();
     fetchPokemonDetail();
   }, []);
   return (
@@ -68,7 +102,14 @@ function PokemonDetail() {
               </li>
             </ul>
           </div>
-          <HeartIcon className="w-6 h-6 text-white hover:text-red-300 hover:cursor-pointer" />
+          <HeartIcon
+            onClick={() => {
+              isFavorited ? updateDoc("dislike") : updateDoc("like");
+            }}
+            className={`w-6 h-6 ${
+              isFavorited ? "text-red-500" : "text-white"
+            } hover:text-red-300 hover:cursor-pointer`}
+          />
         </div>
         {pokeData?.stats?.map((stat) => (
           <div className="flex flex-col my-5">
