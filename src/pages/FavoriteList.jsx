@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronLeftIcon, HeartIcon } from "@heroicons/react/24/solid";
+import { ChevronLeftIcon } from "@heroicons/react/24/solid";
 import { db } from "../utils/firebase";
 import { doc, getDoc, setDoc } from "@firebase/firestore";
 import SkeletonLoadingDetail from "../component/loader/SkeletonLoadingDetail";
-import { capitalCase, sentenceCase } from "change-case";
 import CardIndividualPokemon from "../component/Detail/CardIndividualPokemon";
 
 function FavoriteList() {
