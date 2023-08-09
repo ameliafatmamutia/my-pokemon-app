@@ -4,10 +4,13 @@ import Navbar from "../component/navbar";
 import { ChevronLeftIcon } from "@heroicons/react/24/solid";
 import { db } from "../utils/firebase";
 import { doc, getDoc } from "@firebase/firestore";
+import SkeletonLoadingDetail from "../component/cardDetailLoading";
+import { capitalCase, sentenceCase } from "change-case";
 
 function PokemonDetail() {
   const navigate = useNavigate();
   const [favoritePokeList, setFavoritePokeList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchPokemonDetail = async (name) => {
     try {
@@ -18,7 +21,10 @@ function PokemonDetail() {
       const pokeData = {
         name: jsonData.name,
         abilities: jsonData.abilities,
-        image: jsonData.sprites.other.dream_world.front_default,
+        image:
+          jsonData.sprites.other.dream_world.front_default ||
+          jsonData.sprites.other.home.front_default ||
+          jsonData.sprites.other["official-artwork"].front_default,
         weight: jsonData.weight,
         height: jsonData.height,
         types: jsonData.types,
@@ -42,10 +48,13 @@ function PokemonDetail() {
       })
     );
 
+    setIsLoading(false);
+
     setFavoritePokeList(newFavoriteList);
   };
 
   useEffect(() => {
+    setIsLoading(true);
     fetchFavorite();
   }, []);
 
@@ -61,6 +70,15 @@ function PokemonDetail() {
           />
           <p className="text-xl p-2"> Favorite </p>
         </div>
+        {isLoading && (
+          <div>
+            <SkeletonLoadingDetail />
+            <SkeletonLoadingDetail />
+            <SkeletonLoadingDetail />
+            <SkeletonLoadingDetail />
+            <SkeletonLoadingDetail />
+          </div>
+        )}
         {favoritePokeList.map((pokeData) => (
           <div className="h-140 bg-customCard my-10 p-2 flex">
             <img
@@ -70,7 +88,7 @@ function PokemonDetail() {
             />
             <div className="flex flex-col justify-center ">
               <p className="text-xl font-semibold text-white">
-                {pokeData.name}
+                {capitalCase(pokeData.name || "")}
               </p>
               <ul className="mt-2 text-white">
                 <li>Height: {pokeData.height}</li>
@@ -78,11 +96,11 @@ function PokemonDetail() {
                 <li>
                   Abilities:{" "}
                   {pokeData?.abilities?.map(
-                    (ability) => ability.ability.name + ", "
+                    (ability) => sentenceCase(ability.ability.name || "") + ", "
                   )}
                 </li>
                 <li>
-                  Types: {pokeData?.types?.map((type) => type.type.name + ", ")}
+                  Types: {pokeData?.types?.map((type) => sentenceCase(type.type.name || "") + ", ")}
                 </li>
               </ul>
             </div>

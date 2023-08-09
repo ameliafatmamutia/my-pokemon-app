@@ -7,6 +7,23 @@ import { useNavigate } from "react-router-dom";
 import { doc, getDoc, setDoc } from "@firebase/firestore";
 import { db } from "../utils/firebase";
 import FloatingActionButton from "../component/floatingButton";
+import SkeletonLoadingCard from "../component/cardSquareLoading";
+import { capitalCase } from "change-case";
+
+const LoadingSkeletonCard = () => {
+  const numberOfCards = 12; // Specify the number of cards you want
+
+  const cards = [];
+  for (let i = 0; i < numberOfCards; i++) {
+    cards.push(<SkeletonLoadingCard key={`${i}-skeleton-loading-card`} />);
+  }
+
+  return (
+    <div className="grid grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-3 sm:gap-x-6 sm:gap-y-8 lg:grid-cols-4 lg:gap-x-6 mt-4">
+      {cards}
+    </div>
+  );
+};
 
 const CardComponent = ({ data, isFavorite }) => {
   const navigate = useNavigate();
@@ -42,7 +59,7 @@ const CardComponent = ({ data, isFavorite }) => {
   return (
     <div className="flex flex-col items-center p-4 rounded bg-customCard rounded-xl">
       <img src={data.image} alt={data.name} className="w-32 h-32 mb-4" />
-      <p className="text-lg font-semibold mb-2 text-white">{data.name}</p>
+      <p className="text-lg font-semibold mb-2 text-white">{capitalCase(data.name || "")}</p>
 
       <div className="flex items-center">
         <div className="bg-customButton rounded-full">
@@ -112,7 +129,7 @@ const PokemonList = ({ pokemonData }) => {
 };
 
 function HomePage() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const getPokemons = async ({ pageParam = 1 }) => {
     const res = await fetch(
       `https://pokeapi.co/api/v2/pokemon/?offset=${
@@ -130,7 +147,10 @@ function HomePage() {
         const jsoner = await resIndividual.json();
         return {
           ...element,
-          image: jsoner.sprites.other.dream_world.front_default,
+          image:
+            jsoner.sprites.other.dream_world.front_default ||
+            jsoner.sprites.other.home.front_default ||
+            jsoner.sprites.other["official-artwork"].front_default,
         };
       })
     );
@@ -149,10 +169,9 @@ function HomePage() {
       },
     });
 
-    const scrollToTop = () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      };
-    
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   if (isError) {
     return <div>Error loading data</div>;
@@ -179,14 +198,12 @@ function HomePage() {
           <PokemonList
             pokemonData={data?.pages.flatMap((page) => page.results) || []}
           />
+          {isFetchingNextPage && <LoadingSkeletonCard />}
         </InfiniteScroll>
-
-        {hasNextPage && (
-          <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
-            {isFetchingNextPage ? "Loading more..." : "Load More"}
-          </button>
-        )}
-        <FloatingActionButton handleClickHome={scrollToTop} handleClickFavorite={() => navigate('/favorite')}/>
+        <FloatingActionButton
+          handleClickHome={scrollToTop}
+          handleClickFavorite={() => navigate("/favorite")}
+        />
       </div>
     </div>
   );
