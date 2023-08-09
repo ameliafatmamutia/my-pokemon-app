@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ChevronLeftIcon, HeartIcon } from "@heroicons/react/24/solid";
-import PercentageBar from "../component/percentageBar";
+import PercentageBar from "../component/Detail/percentageBar";
 import { db } from "../utils/firebase";
 import { doc, getDoc, setDoc } from "@firebase/firestore";
-import SkeletonLoadingDetail from "../component/cardDetailLoading";
+import SkeletonLoadingDetail from "../component/loader/SkeletonLoadingDetail";
 import { capitalCase, sentenceCase } from "change-case";
 
 function PokemonDetail() {
