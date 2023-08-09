@@ -6,6 +6,7 @@ import { EyeIcon, HeartIcon } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
 import { doc, getDoc, setDoc } from "@firebase/firestore";
 import { db } from "../utils/firebase";
+import FloatingActionButton from "../component/floatingButton";
 
 const CardComponent = ({ data, isFavorite }) => {
   const navigate = useNavigate();
@@ -111,6 +112,7 @@ const PokemonList = ({ pokemonData }) => {
 };
 
 function HomePage() {
+    const navigate = useNavigate();
   const getPokemons = async ({ pageParam = 1 }) => {
     const res = await fetch(
       `https://pokeapi.co/api/v2/pokemon/?offset=${
@@ -147,12 +149,17 @@ function HomePage() {
       },
     });
 
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
+    
+
   if (isError) {
     return <div>Error loading data</div>;
   }
 
   return (
-    <div className="bg-cyan-200 min-h-screen">
+    <div className="min-h-screen">
       <Navbar />
       <div className="mx-auto max-w-2xl py-1 px-4 sm:py-8 sm:px-6 md:max-w-4xl md:px-6 md:py-6 lg:max-w-7xl lg:px-8 md:py-6">
         <h1>Pokemon List</h1>
@@ -179,6 +186,7 @@ function HomePage() {
             {isFetchingNextPage ? "Loading more..." : "Load More"}
           </button>
         )}
+        <FloatingActionButton handleClickHome={scrollToTop} handleClickFavorite={() => navigate('/favorite')}/>
       </div>
     </div>
   );
