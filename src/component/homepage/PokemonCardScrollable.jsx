@@ -32,7 +32,7 @@ function PokemonCardScrollable() {
     return { ...data, results: dataWithImage };
   };
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isError } =
+  const { data, fetchNextPage, hasNextPage, isError } =
     useInfiniteQuery("pokemon", getPokemons, {
       getNextPageParam: (lastPage, allPages) => {
         if (lastPage.next) {

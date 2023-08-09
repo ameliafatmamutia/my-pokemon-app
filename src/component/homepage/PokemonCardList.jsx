@@ -36,12 +36,12 @@ const PokemonCardList = ({ pokemonData }) => {
   
     return (
       <div className="grid grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-3 sm:gap-x-6 sm:gap-y-8 lg:grid-cols-4 lg:gap-x-6">
-        {pokemonData.map((data, index) => (
+        {pokemonData.map((data) => (
           <PokemonCardComponent
             data={data}
             isFavorite={favoriteNameList.includes(data.name)}
             handleFavorite={handleFavorite}
-            key={`${data.name}-${index}`}
+            key={`${data.name}-pokemonCard-home`}
           />
         ))}
       </div>

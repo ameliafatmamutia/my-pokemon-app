@@ -6,11 +6,10 @@ import { db } from "../utils/firebase";
 import { doc, getDoc, setDoc } from "@firebase/firestore";
 import SkeletonLoadingDetail from "../component/loader/SkeletonLoadingDetail";
 import { capitalCase, sentenceCase } from "change-case";
-import pokeball from '../assets/images/pokeball.png'
+import pokeball from "../assets/images/pokeball.png";
 import FloatingActionButton from "../component/FloatingActionButton";
 import { useDispatch } from "react-redux";
 import { updateCount } from "../utils/redux/favoriteSlice";
-
 
 function PokemonDetail() {
   const { name } = useParams();
@@ -31,14 +30,14 @@ function PokemonDetail() {
         favoriteName: [...favoriteName, name],
         favoriteCount: favoriteCount + 1,
       });
-      dispatch(updateCount(favoriteCount+1))
+      dispatch(updateCount(favoriteCount + 1));
     }
     if (type === "dislike") {
       await setDoc(docRef, {
         favoriteName: favoriteName.filter((data) => data !== name),
         favoriteCount: favoriteCount - 1,
       });
-      dispatch(updateCount(favoriteCount-1))
+      dispatch(updateCount(favoriteCount - 1));
     }
     fetchFavorite();
   };
@@ -49,7 +48,7 @@ function PokemonDetail() {
 
     const isFavorited = docSnap.data().favoriteName.includes(name);
     setIsFavorited(isFavorited);
-    dispatch(updateCount(docSnap.data().favoriteCount))
+    dispatch(updateCount(docSnap.data().favoriteCount));
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -74,7 +73,7 @@ function PokemonDetail() {
       setPokeData(pokeData);
       setIsLoading(false);
     } catch (error) {
-      navigate('/not-found')
+      navigate("/not-found");
     }
   };
 
@@ -94,59 +93,73 @@ function PokemonDetail() {
           <p className="text-xl p-2">{capitalCase(pokeData.name || "")}</p>
         </div>
 
-        {isLoading ? <SkeletonLoadingDetail /> : (
-           <>
-           <div className="h-200 bg-customCard my-10 p-2 flex rounded-xl">
-             <img
-               src={pokeData.image || pokeball}
-               alt={pokeData.name}
-               className="w-48 h-48 m-4 border-r-4 border-gray-500 pr-4"
-             />
-             <div className="flex flex-col justify-center ">
-               <p className="text-xl font-semibold text-white">
-                 {capitalCase(pokeData?.name || "")}
-               </p>
-               <ul className="mt-2 text-white">
-                 <li>Height: {pokeData.height}</li>
-                 <li>Weight: {pokeData.weight}</li>
-                 <li>
-                   Abilities:{" "}
-                   {pokeData?.abilities?.map(
-                     (ability) => sentenceCase(ability.ability.name || "") + ", "
-                   )}
-                 </li>
-                 <li>
-                   Types:{" "}
-                   {pokeData?.types?.map(
-                     (type) => sentenceCase(type?.type.name || "") + ", "
-                   )}
-                 </li>
-               </ul>
-               <div className="flex flex-row mt-6">
-                 <HeartIcon
-                   onClick={() => {
-                     isFavorited ? updateDoc("dislike") : updateDoc("like");
-                   }}
-                   className={`mr-4 w-8 h-8 ${isFavorited ? "text-red-500" : "text-white"
-                     } hover:cursor-pointer`}
-                 />
-               </div>
-             </div>
-           </div>
-           <div className="flex border-b-2 border-black">
-             <p className="text-2xl font-semibold p-2">Stats : </p>
-           </div>
-           {pokeData?.stats?.map((stat) => (
-             <PercentageBar skillName={sentenceCase(stat.stat.name || "")} percentage={stat?.base_stat} />
-           ))}
-         </>
-        )}
+        {isLoading ? (
+          <SkeletonLoadingDetail />
+        ) : (
+          <>
+            <div className="h-[240px] bg-customCard my-10 p-2 rounded-xl overflow-hidden">
+              <div className="flex items-center">
+                <img
+                  src={pokeData.image || pokeball}
+                  alt={pokeData.name}
+                  className="w-24 h-24 md:w-48 md:h-48 m-4 border-gray-500 pr-4"
+                />
+                <div className="border-l-2 p-2 flex flex-col justify-start px-4 overflow-x-auto">
+                  <p className="text-xl font-semibold text-white">
+                    {capitalCase(pokeData.name || "")}
+                  </p>
+                  <ul className="mt-2 text-white">
+                    <li className="whitespace-nowrap mb-1">
+                      Height: {pokeData.height}
+                    </li>
+                    <li className="whitespace-nowrap mb-1">
+                      Weight: {pokeData.weight}
+                    </li>
+                    <li className="whitespace-nowrap mb-1">
+                      Abilities:{" "}
+                      {pokeData?.abilities?.map(
+                        (ability) =>
+                          sentenceCase(ability.ability.name || "") + ", "
+                      )}
+                    </li>
+                    <li className="whitespace-nowrap">
+                      Types:{" "}
+                      {pokeData?.types?.map(
+                        (type) => sentenceCase(type.type.name || "") + ", "
+                      )}
+                    </li>
+                  </ul>
+                  <div className="flex flex-row mt-4">
+                    <HeartIcon
+                      onClick={() => {
+                        isFavorited ? updateDoc("dislike") : updateDoc("like");
+                      }}
+                      className={`mr-2 w-6 h-6 md:w-8 md:h-8 ${
+                        isFavorited ? "text-red-500" : "text-white"
+                      } hover:cursor-pointer`}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
 
+            <div className="flex border-b-2 border-black">
+              <p className="text-2xl font-semibold p-2">Stats : </p>
+            </div>
+            {pokeData?.stats?.map((stat) => (
+              <PercentageBar
+                key={`barpercentage-${stat.stat.name}`}
+                skillName={sentenceCase(stat.stat.name || "")}
+                percentage={stat?.base_stat}
+              />
+            ))}
+          </>
+        )}
       </div>
       <FloatingActionButton
-          handleClickHome={() => navigate("/")}
-          handleClickFavorite={() => navigate("/favorite")}
-        />
+        handleClickHome={() => navigate("/")}
+        handleClickFavorite={() => navigate("/favorite")}
+      />
     </div>
   );
 }

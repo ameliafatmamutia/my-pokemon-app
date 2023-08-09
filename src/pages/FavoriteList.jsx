@@ -96,6 +96,7 @@ function FavoriteList() {
         )}
         {favoritePokeList.map((pokeData) => (
           <CardIndividualPokemon
+            key={`cardFavorite-${pokeData.name}`}
             data={pokeData}
             isLiked={favoriteName.includes(pokeData.name)}
             handleFavorite={() => updateDoc(pokeData.name)}
