@@ -1,17 +1,19 @@
-import React from 'react';
+import React from "react";
 
-const PercentageBar = ({ percentage }) => {
+const ProgressBar = ({ skillName, percentage }) => {
+  const progressBarStyle = {
+    width: `${percentage}%`,
+  };
+
   return (
-    <div className="relative h-8 bg-gray-300 rounded-full overflow-hidden">
-      <div
-        className="absolute top-0 left-0 h-full bg-red-600"
-        style={{ width: `${percentage}%` }}
-      ></div>
-      <div className="absolute top-0 right-0 h-full flex items-center pr-2">
-        <span className="text-gray-600">{percentage}%</span>
+    <div className="flex items-center my-4">
+      <div className="w-1/5 mr-4 font-semibold">{skillName} :</div>
+      <div className="w-4/5 h-6 bg-customCard">
+        <div className="h-full bg-orange-500" style={progressBarStyle} />
       </div>
+      <p className="ml-4">{percentage}%</p>
     </div>
   );
 };
 
-export default PercentageBar;
+export default ProgressBar;

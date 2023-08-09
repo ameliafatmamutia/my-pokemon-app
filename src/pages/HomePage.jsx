@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "../component/navbar";
 import { useInfiniteQuery } from "react-query";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { EyeIcon, HeartIcon } from "@heroicons/react/24/solid";
+import { InformationCircleIcon, HeartIcon } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
 import { doc, getDoc, setDoc } from "@firebase/firestore";
 import { db } from "../utils/firebase";
 import FloatingActionButton from "../component/floatingButton";
 import SkeletonLoadingCard from "../component/cardSquareLoading";
 import { capitalCase } from "change-case";
+import CarouselList from "../component/carouselList";
 
 const LoadingSkeletonCard = () => {
-  const numberOfCards = 12; // Specify the number of cards you want
+  const numberOfCards = 12;
 
   const cards = [];
   for (let i = 0; i < numberOfCards; i++) {
@@ -74,7 +74,7 @@ const CardComponent = ({ data, isFavorite }) => {
             />
           </button>
           <button className="p-2 rounded-md">
-            <EyeIcon
+            <InformationCircleIcon
               className="w-6 h-6 text-white hover:text-blue-300"
               onClick={() => navigate(`/pokemon/${data.name}`)}
             />
@@ -84,8 +84,6 @@ const CardComponent = ({ data, isFavorite }) => {
     </div>
   );
 };
-
-const MemoizedCardComponent = React.memo(CardComponent);
 
 const PokemonList = ({ pokemonData }) => {
   const [favoriteNameList, setFavoriteNameList] = useState([]);
@@ -117,7 +115,7 @@ const PokemonList = ({ pokemonData }) => {
   return (
     <div className="grid grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-3 sm:gap-x-6 sm:gap-y-8 lg:grid-cols-4 lg:gap-x-6">
       {pokemonData.map((data, index) => (
-        <MemoizedCardComponent
+        <CardComponent
           data={data}
           isFavorite={favoriteNameList.includes(data.name)}
           handleFavorite={handleFavorite}
@@ -173,19 +171,29 @@ function HomePage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const images = [
+    'https://placekitten.com/800/400',
+    'https://placekitten.com/800/401',
+    'https://placekitten.com/800/402',
+    // Add more image URLs as needed
+  ];
+
   if (isError) {
     return <div>Error loading data</div>;
   }
 
   return (
     <div className="min-h-screen">
-      <Navbar />
       <div className="mx-auto max-w-2xl py-1 px-4 sm:py-8 sm:px-6 md:max-w-4xl md:px-6 md:py-6 lg:max-w-7xl lg:px-8 md:py-6">
-        <h1>Pokemon List</h1>
+        <CarouselList images={images}>
+          <p>cnajkcnsal</p>
+          <p>cnajkcnsal</p>
+        </CarouselList>
+        <p className="text-black text-2xl font-bold p-4 mb-8">Pokemons</p>
         <InfiniteScroll
           dataLength={
             data?.pages.flatMap((page) => page.results).length + 1 || 0
-          } //This is important field to render the next data
+          }
           next={fetchNextPage}
           hasMore={hasNextPage}
           loader={<h4>Loading...</h4>}

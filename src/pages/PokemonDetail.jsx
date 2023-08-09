@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Navbar from "../component/navbar";
 import { ChevronLeftIcon, HeartIcon } from "@heroicons/react/24/solid";
 import PercentageBar from "../component/percentageBar";
 import { db } from "../utils/firebase";
@@ -78,7 +77,6 @@ function PokemonDetail() {
   }, []);
   return (
     <div className="bg-white min-h-screen">
-      <Navbar />
       <div className="mx-auto max-w-2xl py-1 px-4 sm:py-8 sm:px-6 md:max-w-4xl md:px-6 md:py-6 lg:max-w-7xl lg:px-8 md:py-6">
         <div className="flex border-b-2 border-black">
           <ChevronLeftIcon
@@ -90,14 +88,16 @@ function PokemonDetail() {
 
         {isLoading && <SkeletonLoadingDetail />}
 
-        <div className="h-140 bg-customCard my-10 p-2 flex">
+        <div className="h-200 bg-customCard my-10 p-2 flex">
           <img
             src={pokeData.image}
             alt={pokeData.name}
-            className="w-32 h-32 m-4 border-r-4 border-gray-500 pr-4"
+            className="w-48 h-48 m-4 border-r-4 border-gray-500 pr-4"
           />
           <div className="flex flex-col justify-center ">
-            <p className="text-xl font-semibold text-white">{capitalCase(pokeData?.name || "")}</p>
+            <p className="text-xl font-semibold text-white">
+              {capitalCase(pokeData?.name || "")}
+            </p>
             <ul className="mt-2 text-white">
               <li>Height: {pokeData.height}</li>
               <li>Weight: {pokeData.weight}</li>
@@ -108,24 +108,29 @@ function PokemonDetail() {
                 )}
               </li>
               <li>
-                Types: {pokeData?.types?.map((type) => sentenceCase(type?.type.name || "") + ", ")}
+                Types:{" "}
+                {pokeData?.types?.map(
+                  (type) => sentenceCase(type?.type.name || "") + ", "
+                )}
               </li>
             </ul>
+            <div className="flex flex-row mt-6">
+                <HeartIcon
+                  onClick={() => {
+                    isFavorited ? updateDoc("dislike") : updateDoc("like");
+                  }}
+                  className={`mr-4 w-8 h-8 ${
+                    isFavorited ? "text-red-500" : "text-white"
+                  } hover:text-red-300 hover:cursor-pointer`}
+                />
+              </div>
           </div>
-          <HeartIcon
-            onClick={() => {
-              isFavorited ? updateDoc("dislike") : updateDoc("like");
-            }}
-            className={`w-6 h-6 ${
-              isFavorited ? "text-red-500" : "text-white"
-            } hover:text-red-300 hover:cursor-pointer`}
-          />
+        </div>
+        <div className="flex border-b-2 border-black">
+          <p className="text-2xl font-semibold p-2">Stats : </p>
         </div>
         {pokeData?.stats?.map((stat) => (
-          <div className="flex flex-col my-5">
-            <p>{sentenceCase(stat.stat.name || "")}</p>
-            <PercentageBar percentage={stat?.base_stat} />
-          </div>
+            <PercentageBar skillName={sentenceCase(stat.stat.name || "")} percentage={stat?.base_stat} />
         ))}
       </div>
     </div>
