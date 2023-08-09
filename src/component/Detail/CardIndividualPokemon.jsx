@@ -1,6 +1,7 @@
 import { HeartIcon } from "@heroicons/react/24/solid";
 import { capitalCase, sentenceCase } from "change-case";
 import React from "react";
+import pokeball from '../../assets/images/pokeball.png'
 
 function CardIndividualPokemon({
   data,
@@ -11,7 +12,7 @@ function CardIndividualPokemon({
   return (
     <div className="h-200 bg-customCard my-10 p-2 flex">
       <img
-        src={data.image}
+        src={data.image || pokeball}
         alt={data.name}
         className="w-48 h-48 m-4 border-r-4 border-gray-500 pr-4"
       />
@@ -42,11 +43,11 @@ function CardIndividualPokemon({
             }}
             className={`mr-4 w-8 h-8 ${
               isLiked ? "text-red-500" : "text-white"
-            } hover:text-red-300 hover:cursor-pointer`}
+            } hover:cursor-pointer`}
           />
           <button
             onClick={() => handleViewDetail()}
-            className="rounded-lg bg-red-500 hover:bg-red-300 p-1 text-sm text-white"
+            className="rounded-lg bg-red-500 p-1 text-sm text-white"
           >
             View Details
           </button>

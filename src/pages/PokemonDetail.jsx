@@ -6,6 +6,7 @@ import { db } from "../utils/firebase";
 import { doc, getDoc, setDoc } from "@firebase/firestore";
 import SkeletonLoadingDetail from "../component/loader/SkeletonLoadingDetail";
 import { capitalCase, sentenceCase } from "change-case";
+import pokeball from '../assets/images/pokeball.png'
 
 function PokemonDetail() {
   const { name } = useParams();
@@ -82,14 +83,14 @@ function PokemonDetail() {
             className="h-10 w-10 hover:cursor-pointer"
             onClick={() => navigate("/")}
           />
-          <p className="text-xl p-2">{capitalCase(name || "")}</p>
+          <p className="text-xl p-2">{capitalCase(pokeData.name || "")}</p>
         </div>
 
         {isLoading ? <SkeletonLoadingDetail /> : (
            <>
            <div className="h-200 bg-customCard my-10 p-2 flex">
              <img
-               src={pokeData.image}
+               src={pokeData.image || pokeball}
                alt={pokeData.name}
                className="w-48 h-48 m-4 border-r-4 border-gray-500 pr-4"
              />
@@ -119,7 +120,7 @@ function PokemonDetail() {
                      isFavorited ? updateDoc("dislike") : updateDoc("like");
                    }}
                    className={`mr-4 w-8 h-8 ${isFavorited ? "text-red-500" : "text-white"
-                     } hover:text-red-300 hover:cursor-pointer`}
+                     } hover:cursor-pointer`}
                  />
                </div>
              </div>

@@ -60,7 +60,7 @@ function PokemonCardScrollable() {
           }
           next={fetchNextPage}
           hasMore={hasNextPage}
-          loader={<h4>Loading...</h4>}
+          loader={<LoadingSkeletonCard />}
           endMessage={
             <p style={{ textAlign: "center" }}>
               <b>Yay! You have seen it all</b>
@@ -70,7 +70,6 @@ function PokemonCardScrollable() {
           <PokemonCardList
             pokemonData={data?.pages.flatMap((page) => page.results) || []}
           />
-          {isFetchingNextPage && <LoadingSkeletonCard />}
         </InfiniteScroll>
     </div>
   )

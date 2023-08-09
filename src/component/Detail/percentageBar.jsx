@@ -2,7 +2,7 @@ import React from "react";
 
 const ProgressBar = ({ skillName, percentage }) => {
   const progressBarStyle = {
-    width: `${percentage}%`,
+    width: `${percentage > 100 ? 100 : percentage}%`,
   };
 
   return (
@@ -11,7 +11,7 @@ const ProgressBar = ({ skillName, percentage }) => {
       <div className="w-4/5 h-6 bg-customCard">
         <div className="h-full bg-orange-500" style={progressBarStyle} />
       </div>
-      <p className="ml-4">{percentage}%</p>
+      <p className="ml-4">  {percentage}%</p>
     </div>
   );
 };

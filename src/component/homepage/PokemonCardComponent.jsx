@@ -4,7 +4,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../../utils/firebase";
 import { capitalCase } from 'change-case';
 import { HeartIcon, InformationCircleIcon } from '@heroicons/react/24/solid';
-
+import pokeball from '../../assets/images/pokeball.png'
 const PokemonCardComponent = ({ data, isFavorite }) => {
     const navigate = useNavigate();
     const [tempIsFavorite, setTempIsFavorite] = useState(false);
@@ -38,7 +38,7 @@ const PokemonCardComponent = ({ data, isFavorite }) => {
   
     return (
       <div className="flex flex-col items-center p-4 rounded bg-customCard rounded-xl">
-        <img src={data.image} alt={data.name} className="w-32 h-32 mb-4" />
+        <img src={data.image || pokeball} alt={data.name} className="w-32 h-32 mb-4" />
         <p className="text-lg font-semibold mb-2 text-white">
           {capitalCase(data.name || "")}
         </p>
@@ -52,12 +52,12 @@ const PokemonCardComponent = ({ data, isFavorite }) => {
                 }}
                 className={`w-6 h-6 ${
                   tempIsFavorite ? "text-red-500" : "text-white"
-                } hover:text-red-300 hover:cursor-pointer`}
+                } hover:cursor-pointer`}
               />
             </button>
             <button className="p-2 rounded-md">
               <InformationCircleIcon
-                className="w-6 h-6 text-white hover:text-blue-300"
+                className="w-6 h-6 text-white"
                 onClick={() => navigate(`/pokemon/${data.name}`)}
               />
             </button>
