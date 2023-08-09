@@ -40,7 +40,6 @@ function PokemonDetail() {
     const docSnap = await getDoc(docRef);
 
     const isFavorited = docSnap.data().favoriteName.includes(name);
-    console.log(docSnap.data().favoriteName, "fav name");
     setIsFavorited(isFavorited);
   };
 
