@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronLeftIcon } from "@heroicons/react/24/solid";
 import { db } from "../utils/firebase";
 import { doc, getDoc, setDoc } from "@firebase/firestore";
 import SkeletonLoadingDetail from "../component/loader/SkeletonLoadingDetail";
 import CardIndividualPokemon from "../component/Detail/CardIndividualPokemon";
 import FloatingActionButton from "../component/FloatingActionButton";
+import { useDispatch, useSelector } from "react-redux";
+import { updateCount } from "../utils/redux/favoriteSlice";
 
 function FavoriteList() {
   const navigate = useNavigate();
   const [favoritePokeList, setFavoritePokeList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [favoriteCount, setFavoriteCount] = useState(0);
   const [favoriteName, setFavoriteName] = useState([]);
+  const dispatch = useDispatch();
+  const { favoriteCount } = useSelector(state => state.favoriteSlice)
 
   const updateDoc = async (name) => {
     const docRef = doc(db, "pokedex", "favoriteList");
@@ -24,6 +26,7 @@ function FavoriteList() {
       favoriteName: favoriteName.filter((nameData) => nameData !== name),
       favoriteCount: favoriteCount - 1,
     });
+    dispatch(updateCount(favoriteCount-1))
     fetchFavorite();
   };
 
@@ -56,7 +59,7 @@ function FavoriteList() {
 
     const favoriteName = docSnap.data().favoriteName;
     setFavoriteName(favoriteName);
-    setFavoriteCount(docSnap.data().favoriteCount);
+    dispatch(updateCount(docSnap.data().favoriteCount))
 
     const newFavoriteList = await Promise.all(
       favoriteName.map(async (name) => {
@@ -81,7 +84,7 @@ function FavoriteList() {
 
   return (
     <div className="bg-white min-h-screen">
-      <div className="mx-auto max-w-2xl py-1 px-4 sm:py-8 sm:px-6 md:max-w-4xl md:px-6 md:py-6 lg:max-w-7xl lg:px-8 md:py-6">
+      <div className="mx-auto max-w-2xl py-1 px-4 sm:py-8 sm:px-6 md:max-w-4xl md:px-6 md:py-6 lg:max-w-7xl lg:px-8">
         {isLoading && (
           <div>
             <SkeletonLoadingDetail />
@@ -106,7 +109,6 @@ function FavoriteList() {
       <FloatingActionButton
           handleClickHome={() => navigate("/")}
           handleClickFavorite={scrollToTop}
-          totalFavorited={favoriteCount} //change to a number
         />
     </div>
   );

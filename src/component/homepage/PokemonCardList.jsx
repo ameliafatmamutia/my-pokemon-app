@@ -2,16 +2,20 @@ import React, { useEffect, useState } from 'react'
 import { doc, getDoc } from "firebase/firestore";
 import PokemonCardComponent from './PokemonCardComponent';
 import { db } from '../../utils/firebase';
+import { useDispatch } from "react-redux";
+import { updateCount } from "../../utils/redux/favoriteSlice";
 
 const PokemonCardList = ({ pokemonData }) => {
     const [favoriteNameList, setFavoriteNameList] = useState([]);
-  
+    const dispatch = useDispatch();
+
     const fetchFavorite = async () => {
       const docRef = doc(db, "pokedex", "favoriteList");
       const docSnap = await getDoc(docRef);
   
       const favoriteName = docSnap.data().favoriteName;
       setFavoriteNameList(favoriteName);
+      dispatch(updateCount(docSnap.data().favoriteCount))
     };
   
     useEffect(() => {

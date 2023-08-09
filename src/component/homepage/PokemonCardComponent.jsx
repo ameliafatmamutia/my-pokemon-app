@@ -5,9 +5,13 @@ import { db } from "../../utils/firebase";
 import { capitalCase } from 'change-case';
 import { HeartIcon, InformationCircleIcon } from '@heroicons/react/24/solid';
 import pokeball from '../../assets/images/pokeball.png'
+import { useDispatch } from "react-redux";
+import { updateCount } from "../../utils/redux/favoriteSlice";
+
 const PokemonCardComponent = ({ data, isFavorite }) => {
     const navigate = useNavigate();
     const [tempIsFavorite, setTempIsFavorite] = useState(false);
+    const dispatch = useDispatch();
     const updateDoc = async (type) => {
       const docRef = doc(db, "pokedex", "favoriteList");
       const docSnap = await getDoc(docRef);
@@ -19,6 +23,7 @@ const PokemonCardComponent = ({ data, isFavorite }) => {
           favoriteName: [...favoriteName, data.name],
           favoriteCount: favoriteCount + 1,
         });
+        dispatch(updateCount(favoriteCount+1))
         setTempIsFavorite(true);
       }
       if (type === "dislike") {
@@ -26,6 +31,7 @@ const PokemonCardComponent = ({ data, isFavorite }) => {
           favoriteName: favoriteName.filter((nameData) => nameData !== data.name),
           favoriteCount: favoriteCount - 1,
         });
+        dispatch(updateCount(favoriteCount-1))
         setTempIsFavorite(false);
       }
     };
@@ -37,7 +43,7 @@ const PokemonCardComponent = ({ data, isFavorite }) => {
     }, [isFavorite]);
   
     return (
-      <div className="flex flex-col items-center p-4 rounded bg-customCard rounded-xl">
+      <div className="flex flex-col items-center p-4 bg-customCard rounded-xl">
         <img src={data.image || pokeball} alt={data.name} className="w-32 h-32 mb-4" />
         <p className="text-lg font-semibold mb-2 text-white">
           {capitalCase(data.name || "")}

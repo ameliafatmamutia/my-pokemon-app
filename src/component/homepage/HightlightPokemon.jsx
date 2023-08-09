@@ -6,18 +6,22 @@ import { useNavigate } from "react-router-dom";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../../utils/firebase";
 import { generateRandomNumbers } from "../../utils/randomArrayNumber";
+import { useDispatch } from "react-redux";
+import { updateCount } from "../../utils/redux/favoriteSlice";
 
 function HightlightPokemon() {
   const navigate = useNavigate();
   const [highlightedPokemon, setHighlightedPokemon] = useState([]);
   const [isLoadingHightlight, setIsLoadingHightlight] = useState(false);
   const [favoriteNameList, setFavoriteNameList] = useState([]);
+  const dispatch = useDispatch();
 
   const fetchFavorite = async () => {
     const docRef = doc(db, "pokedex", "favoriteList");
     const docSnap = await getDoc(docRef);
     const favoriteName = docSnap.data().favoriteName;
     setFavoriteNameList(favoriteName);
+    dispatch(updateCount(docSnap.data().favoriteCount))
   };
 
   const fetchPokemonDetail = async (id) => {
@@ -53,6 +57,7 @@ function HightlightPokemon() {
         favoriteName: newFavoriteName,
         favoriteCount: favoriteCount + 1,
       });
+      dispatch(updateCount(favoriteCount+1))
       setFavoriteNameList(newFavoriteName);
     }
     if (type === "dislike") {
@@ -61,6 +66,7 @@ function HightlightPokemon() {
         favoriteName: newFavoriteName,
         favoriteCount: favoriteCount - 1,
       });
+      dispatch(updateCount(favoriteCount-1))
       setFavoriteNameList(newFavoriteName);
     }
   };

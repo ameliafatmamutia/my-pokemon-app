@@ -8,6 +8,9 @@ import SkeletonLoadingDetail from "../component/loader/SkeletonLoadingDetail";
 import { capitalCase, sentenceCase } from "change-case";
 import pokeball from '../assets/images/pokeball.png'
 import FloatingActionButton from "../component/FloatingActionButton";
+import { useDispatch } from "react-redux";
+import { updateCount } from "../utils/redux/favoriteSlice";
+
 
 function PokemonDetail() {
   const { name } = useParams();
@@ -15,7 +18,7 @@ function PokemonDetail() {
   const [pokeData, setPokeData] = useState({});
   const [isFavorited, setIsFavorited] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [favoriteCount, setFavoriteCount] = useState(0);
+  const dispatch = useDispatch();
 
   const updateDoc = async (type) => {
     const docRef = doc(db, "pokedex", "favoriteList");
@@ -28,12 +31,14 @@ function PokemonDetail() {
         favoriteName: [...favoriteName, name],
         favoriteCount: favoriteCount + 1,
       });
+      dispatch(updateCount(favoriteCount+1))
     }
     if (type === "dislike") {
       await setDoc(docRef, {
         favoriteName: favoriteName.filter((data) => data !== name),
         favoriteCount: favoriteCount - 1,
       });
+      dispatch(updateCount(favoriteCount-1))
     }
     fetchFavorite();
   };
@@ -44,7 +49,7 @@ function PokemonDetail() {
 
     const isFavorited = docSnap.data().favoriteName.includes(name);
     setIsFavorited(isFavorited);
-    setFavoriteCount(docSnap.data().favoriteCount);
+    dispatch(updateCount(docSnap.data().favoriteCount))
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -80,7 +85,7 @@ function PokemonDetail() {
   }, []);
   return (
     <div className="bg-white min-h-screen">
-      <div className="mx-auto max-w-2xl py-1 px-4 sm:py-8 sm:px-6 md:max-w-4xl md:px-6 md:py-6 lg:max-w-7xl lg:px-8 md:py-6">
+      <div className="mx-auto max-w-2xl py-1 px-4 sm:py-8 sm:px-6 md:max-w-4xl md:px-6 md:py-6 lg:max-w-7xl lg:px-8">
         <div className="flex border-b-2 border-black">
           <ChevronLeftIcon
             className="h-10 w-10 hover:cursor-pointer"
@@ -141,7 +146,6 @@ function PokemonDetail() {
       <FloatingActionButton
           handleClickHome={() => navigate("/")}
           handleClickFavorite={() => navigate("/favorite")}
-          totalFavorited={favoriteCount} //change to a number
         />
     </div>
   );
