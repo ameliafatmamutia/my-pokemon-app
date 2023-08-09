@@ -16,7 +16,6 @@ function HightlightPokemon() {
   const fetchFavorite = async () => {
     const docRef = doc(db, "pokedex", "favoriteList");
     const docSnap = await getDoc(docRef);
-
     const favoriteName = docSnap.data().favoriteName;
     setFavoriteNameList(favoriteName);
   };
@@ -88,7 +87,7 @@ function HightlightPokemon() {
 
   return (
     <div>
-      <p className="text-black text-2xl font-bold">Highlight : </p>
+      <p className="text-black text-2xl font-bold">Highlight</p>
       {isLoadingHightlight ? (
         <SkeletonLoadingDetail />
       ) : (

@@ -19,6 +19,7 @@ function HomePage() {
         <FloatingActionButton
           handleClickHome={scrollToTop}
           handleClickFavorite={() => navigate("/favorite")}
+          totalFavorited={100} //change to a number
         />
       </div>
     </div>

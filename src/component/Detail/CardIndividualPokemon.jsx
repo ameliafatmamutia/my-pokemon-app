@@ -10,7 +10,7 @@ function CardIndividualPokemon({
   isLiked,
 }) {
   return (
-    <div className="h-200 bg-customCard my-10 p-2 flex">
+    <div className="h-200 bg-customCard my-10 p-2 flex rounded-xl">
       <img
         src={data.image || pokeball}
         alt={data.name}

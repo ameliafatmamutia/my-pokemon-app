@@ -7,6 +7,7 @@ import { doc, getDoc, setDoc } from "@firebase/firestore";
 import SkeletonLoadingDetail from "../component/loader/SkeletonLoadingDetail";
 import { capitalCase, sentenceCase } from "change-case";
 import pokeball from '../assets/images/pokeball.png'
+import FloatingActionButton from "../component/FloatingActionButton";
 
 function PokemonDetail() {
   const { name } = useParams();
@@ -14,6 +15,7 @@ function PokemonDetail() {
   const [pokeData, setPokeData] = useState({});
   const [isFavorited, setIsFavorited] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [favoriteCount, setFavoriteCount] = useState(0);
 
   const updateDoc = async (type) => {
     const docRef = doc(db, "pokedex", "favoriteList");
@@ -42,6 +44,7 @@ function PokemonDetail() {
 
     const isFavorited = docSnap.data().favoriteName.includes(name);
     setIsFavorited(isFavorited);
+    setFavoriteCount(docSnap.data().favoriteCount);
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -88,7 +91,7 @@ function PokemonDetail() {
 
         {isLoading ? <SkeletonLoadingDetail /> : (
            <>
-           <div className="h-200 bg-customCard my-10 p-2 flex">
+           <div className="h-200 bg-customCard my-10 p-2 flex rounded-xl">
              <img
                src={pokeData.image || pokeball}
                alt={pokeData.name}
@@ -135,6 +138,11 @@ function PokemonDetail() {
         )}
 
       </div>
+      <FloatingActionButton
+          handleClickHome={() => navigate("/")}
+          handleClickFavorite={() => navigate("/favorite")}
+          totalFavorited={favoriteCount} //change to a number
+        />
     </div>
   );
 }

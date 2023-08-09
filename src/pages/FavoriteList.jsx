@@ -5,6 +5,7 @@ import { db } from "../utils/firebase";
 import { doc, getDoc, setDoc } from "@firebase/firestore";
 import SkeletonLoadingDetail from "../component/loader/SkeletonLoadingDetail";
 import CardIndividualPokemon from "../component/Detail/CardIndividualPokemon";
+import FloatingActionButton from "../component/FloatingActionButton";
 
 function FavoriteList() {
   const navigate = useNavigate();
@@ -74,16 +75,13 @@ function FavoriteList() {
     fetchFavorite();
   }, []);
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <div className="bg-white min-h-screen">
       <div className="mx-auto max-w-2xl py-1 px-4 sm:py-8 sm:px-6 md:max-w-4xl md:px-6 md:py-6 lg:max-w-7xl lg:px-8 md:py-6">
-        <div className="flex border-b-2 border-black">
-          <ChevronLeftIcon
-            className="h-10 w-10 hover:cursor-pointer"
-            onClick={() => navigate("/")}
-          />
-          <p className="text-xl p-2"> Favorite </p>
-        </div>
         {isLoading && (
           <div>
             <SkeletonLoadingDetail />
@@ -105,6 +103,11 @@ function FavoriteList() {
           <p className="text-black text-2xl">{`Total favorite pokemon : ${favoriteCount}`}</p>
         </div>
       </div>
+      <FloatingActionButton
+          handleClickHome={() => navigate("/")}
+          handleClickFavorite={scrollToTop}
+          totalFavorited={favoriteCount} //change to a number
+        />
     </div>
   );
 }
