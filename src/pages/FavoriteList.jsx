@@ -90,13 +90,14 @@ function FavoriteList() {
       <div className="mx-auto max-w-2xl px-4 sm:py-8 sm:px-6 md:max-w-4xl md:px-6 md:py-6 lg:max-w-7xl lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-x-4">
         {isLoading && (
-          <div>
+          <>
             <SkeletonLoadingDetail />
             <SkeletonLoadingDetail />
             <SkeletonLoadingDetail />
             <SkeletonLoadingDetail />
             <SkeletonLoadingDetail />
-          </div>
+            <SkeletonLoadingDetail />
+          </>
         )}
         {favoritePokeList.map((pokeData) => (
           <CardIndividualPokemon
