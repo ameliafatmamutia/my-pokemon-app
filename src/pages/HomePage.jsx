@@ -13,7 +13,7 @@ function HomePage() {
 
   return (
     <div className="min-h-screen">
-      <div className="mx-auto max-w-2xl py-1 px-4 sm:py-8 sm:px-6 md:max-w-4xl md:px-6 lg:max-w-7xl lg:px-8 md:py-6">
+      <div className="mx-auto max-w-2xl mt-8 py-1 px-6 sm:py-8 sm:px-6 md:max-w-4xl md:px-6 lg:max-w-7xl lg:px-8 md:py-6">
         <HightlightPokemon/>
         <PokemonCardScrollable/>
         <FloatingActionButton

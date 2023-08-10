@@ -10,21 +10,21 @@ function CardIndividualPokemon({
   isLiked,
 }) {
   return (
-    <div className="h-[240px] bg-customCard my-10 p-2 rounded-xl overflow-hidden">
+    <div className="h-[150px] bg-customCard my-2 rounded-xl flex flex-row justify-around items-center">
       <div className="flex items-center">
         <img
           src={data.image || pokeball}
           alt={data.name}
-          className="w-24 h-24 md:w-48 md:h-48 m-4 border-gray-500 pr-4"
+          className="w-[70px] h-[70px] md:w-[130px] md:h-[130px] m-4"
         />
-        <div className="border-l-2 p-2 flex flex-col justify-start px-4 overflow-x-auto">
-          <p className="text-xl font-semibold text-white">
+        <div className="p-2 flex flex-col justify-start px-4">
+          <p className="text-[12px] font-semibold text-white">
             {capitalCase(data.name || "")}
           </p>
-          <ul className="mt-2 text-white">
-            <li className="whitespace-nowrap mb-1">Height: {data.height}</li>
-            <li className="whitespace-nowrap mb-1">Weight: {data.weight}</li>
-            <li className="whitespace-nowrap mb-1">
+          <ul className="mt-2 text-white text-[10px]">
+            <li className="whitespace-nowrap">Height: {data.height}</li>
+            <li className="whitespace-nowrap">Weight: {data.weight}</li>
+            <li className="whitespace-nowrap">
               Abilities:{" "}
               {data?.abilities?.map(
                 (ability) => sentenceCase(ability.ability.name || "") + ", "
@@ -37,7 +37,7 @@ function CardIndividualPokemon({
               )}
             </li>
           </ul>
-          <div className="flex flex-row mt-4">
+          <div className="flex flex-row justify-end mt-4">
             <HeartIcon
               onClick={() => {
                 handleFavorite();
@@ -48,7 +48,7 @@ function CardIndividualPokemon({
             />
             <button
               onClick={() => handleViewDetail()}
-              className="rounded-lg bg-red-500 p-1 text-sm text-white"
+              className="rounded-lg bg-[#CC4B00] py-1 px-3 text-xs text-white"
             >
               View Details
             </button>

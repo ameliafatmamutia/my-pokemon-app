@@ -50,7 +50,7 @@ function PokemonCardScrollable() {
 
   return (
     <div>
-      <p className="text-black text-2xl font-bold p-4 mb-8">Pokemons</p>
+      <p className="text-black text-2xl font-bold mt-8 mb-2">Pokemons</p>
       <InfiniteScroll
         dataLength={data?.pages.flatMap((page) => page.results).length + 1 || 0}
         next={fetchNextPage}

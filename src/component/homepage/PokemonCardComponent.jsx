@@ -44,8 +44,8 @@ const PokemonCardComponent = ({ data, isFavorite }) => {
   
     return (
       <div className="flex flex-col items-center p-4 bg-customCard rounded-xl">
-        <img src={data.image || pokeball} alt={data.name} className="w-32 h-32 mb-4" />
-        <p className="text-lg font-semibold mb-2 text-white">
+        <img src={data.image || pokeball} alt={data.name} className="w-20 h-20 mb-4" />
+        <p className="text-[12px] font-semibold mb-2 text-white">
           {capitalCase(data.name || "")}
         </p>
   
