@@ -10,6 +10,7 @@ import pokeball from "../assets/images/pokeball.png";
 import FloatingActionButton from "../component/FloatingActionButton";
 import { useDispatch } from "react-redux";
 import { updateCount } from "../utils/redux/favoriteSlice";
+import { toast } from "react-hot-toast";
 
 function PokemonDetail() {
   const { name } = useParams();
@@ -43,12 +44,17 @@ function PokemonDetail() {
   };
 
   const fetchFavorite = async () => {
-    const docRef = doc(db, "pokedex", "favoriteList");
-    const docSnap = await getDoc(docRef);
-
-    const isFavorited = docSnap.data().favoriteName.includes(name);
-    setIsFavorited(isFavorited);
-    dispatch(updateCount(docSnap.data().favoriteCount));
+    try {
+      const docRef = doc(db, "pokedex", "favoriteList");
+      const docSnap = await getDoc(docRef);
+  
+      const isFavorited = docSnap.data().favoriteName.includes(name);
+      setIsFavorited(isFavorited);
+      dispatch(updateCount(docSnap.data().favoriteCount));
+      setIsLoading(false);
+    } catch (error) {
+      toast.error('Cannot fetch user data on this pokemon')
+    }
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -74,6 +80,7 @@ function PokemonDetail() {
       setIsLoading(false);
     } catch (error) {
       navigate("/not-found");
+      toast.error('Pokemon data not found')
     }
   };
 

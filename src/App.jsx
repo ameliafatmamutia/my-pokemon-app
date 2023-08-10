@@ -4,6 +4,7 @@ import HomePage from "./pages/HomePage";
 import FavoriteList from "./pages/FavoriteList";
 import PokemonDetail from "./pages/PokemonDetail";
 import PageNotFound from "./pages/404";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route Component={PageNotFound} path="/not-found"/>
         </Routes>
       </BrowserRouter>
+      <Toaster />
     </div>
   );
 }

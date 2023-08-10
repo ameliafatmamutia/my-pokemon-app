@@ -7,6 +7,7 @@ import CardIndividualPokemon from "../component/Detail/CardIndividualPokemon";
 import FloatingActionButton from "../component/FloatingActionButton";
 import { useDispatch, useSelector } from "react-redux";
 import { updateCount } from "../utils/redux/favoriteSlice";
+import { toast } from "react-hot-toast";
 
 function FavoriteList() {
   const navigate = useNavigate();
@@ -49,28 +50,34 @@ function FavoriteList() {
       };
       return pokeData;
     } catch (error) {
-      console.log("error");
+      toast.error('Error while fetching pokemon detail')
     }
   };
 
   const fetchFavorite = async () => {
-    const docRef = doc(db, "pokedex", "favoriteList");
-    const docSnap = await getDoc(docRef);
+    try {
+      const docRef = doc(db, "pokedex", "favoriteList");
+      const docSnap = await getDoc(docRef);
 
-    const favoriteName = docSnap.data().favoriteName;
-    setFavoriteName(favoriteName);
-    dispatch(updateCount(docSnap.data().favoriteCount))
+      const favoriteName = docSnap.data().favoriteName;
+      setFavoriteName(favoriteName);
+      dispatch(updateCount(docSnap.data().favoriteCount))
 
-    const newFavoriteList = await Promise.all(
-      favoriteName.map(async (name) => {
-        const pokeData = await fetchPokemonDetail(name);
-        return pokeData;
-      })
-    );
+      const newFavoriteList = await Promise.all(
+        favoriteName.map(async (name) => {
+          const pokeData = await fetchPokemonDetail(name);
+          return pokeData;
+        })
+      );
 
-    setIsLoading(false);
+      setIsLoading(false);
 
-    setFavoritePokeList(newFavoriteList);
+      setFavoritePokeList(newFavoriteList);
+    } catch (error) {
+      toast.error('Error while fetch pokemon favorite')
+      setIsLoading(false);
+    }
+    
   };
 
   useEffect(() => {
@@ -99,13 +106,13 @@ function FavoriteList() {
             <SkeletonLoadingDetail />
           </>
         )}
-        {favoritePokeList.map((pokeData) => (
+        {favoritePokeList?.map((pokeData) => (
           <CardIndividualPokemon
-            key={`cardFavorite-${pokeData.name}`}
+            key={`cardFavorite-${pokeData?.name}`}
             data={pokeData}
-            isLiked={favoriteName.includes(pokeData.name)}
-            handleFavorite={() => updateDoc(pokeData.name)}
-            handleViewDetail={() => navigate("/pokemon/" + pokeData.name)}
+            isLiked={favoriteName.includes(pokeData?.name)}
+            handleFavorite={() => updateDoc(pokeData?.name)}
+            handleViewDetail={() => navigate("/pokemon/" + pokeData?.name)}
           />
         ))}
         </div>       

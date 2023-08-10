@@ -1,5 +1,5 @@
 import { HeartIcon } from "@heroicons/react/24/solid";
-import { capitalCase, sentenceCase } from "change-case";
+import { capitalCase } from "change-case";
 import React from "react";
 import pokeball from "../../assets/images/pokeball.png";
 
@@ -13,17 +13,17 @@ function CardIndividualPokemon({
     <div className="h-[150px] bg-customCard my-2 rounded-xl flex flex-row justify-around items-center">
       <div className="flex items-center">
         <img
-          src={data.image || pokeball}
-          alt={data.name}
+          src={data?.image || pokeball}
+          alt={data?.name}
           className="w-[70px] h-[70px] md:w-[130px] md:h-[130px] m-4"
         />
         <div className="p-2 flex flex-col justify-start px-4">
           <p className="text-[12px] font-semibold text-white">
-            {capitalCase(data.name || "")}
+            {capitalCase(data?.name || "")}
           </p>
           <ul className="mt-2 text-white text-[10px]">
-            <li className="whitespace-nowrap">height: {data.height}</li>
-            <li className="whitespace-nowrap">weight: {data.weight}</li>
+            <li className="whitespace-nowrap">height: {data?.height}</li>
+            <li className="whitespace-nowrap">weight: {data?.weight}</li>
             <li className="whitespace-nowrap">
               abilities:{" "}
               {data?.abilities?.map(

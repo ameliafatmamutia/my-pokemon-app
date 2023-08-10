@@ -1,7 +1,7 @@
 import SkeletonLoadingCard from "./SkeletonLoadingCard";
 
 const LoadingSkeletonCard = () => {
-    const numberOfCards = 10;
+    const numberOfCards = 20;
   
     const cards = [];
     for (let i = 0; i < numberOfCards; i++) {

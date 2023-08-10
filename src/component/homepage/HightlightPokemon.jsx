@@ -8,6 +8,7 @@ import { db } from "../../utils/firebase";
 import { generateRandomNumbers } from "../../utils/randomArrayNumber";
 import { useDispatch } from "react-redux";
 import { updateCount } from "../../utils/redux/favoriteSlice";
+import { toast } from "react-hot-toast";
 
 function HightlightPokemon() {
   const navigate = useNavigate();
@@ -17,11 +18,15 @@ function HightlightPokemon() {
   const dispatch = useDispatch();
 
   const fetchFavorite = async () => {
-    const docRef = doc(db, "pokedex", "favoriteList");
-    const docSnap = await getDoc(docRef);
-    const favoriteName = docSnap.data().favoriteName;
-    setFavoriteNameList(favoriteName);
-    dispatch(updateCount(docSnap.data().favoriteCount))
+    try {
+      const docRef = doc(db, "pokedex", "favoriteList");
+      const docSnap = await getDoc(docRef);
+      const favoriteName = docSnap.data().favoriteName;
+      setFavoriteNameList(favoriteName);
+      dispatch(updateCount(docSnap.data().favoriteCount))
+    } catch (error) {
+      toast.error('Error while fetch user favorite pokemon')
+    }
   };
 
   const fetchPokemonDetail = async (id) => {
@@ -42,6 +47,7 @@ function HightlightPokemon() {
       return pokeData;
     } catch (error) {
       console.log("error");
+      toast.error('Error while fetch pokemon detail for id = ', id)
     }
   };
 
@@ -98,16 +104,17 @@ function HightlightPokemon() {
         <SkeletonLoadingDetail />
       ) : (
         <CarouselList>
-          {highlightedPokemon.map((pokeData) => (
+          {highlightedPokemon?.map((pokeData) => (
             <CardIndividualPokemon
+              key={`${pokeData.name}-highlighted-pokemon`}
               data={pokeData}
-              isLiked={favoriteNameList.includes(pokeData.name)}
+              isLiked={favoriteNameList.includes(pokeData?.name)}
               handleFavorite={() => {
-                favoriteNameList.includes(pokeData.name)
-                  ? updateDoc("dislike", pokeData.name)
-                  : updateDoc("like", pokeData.name);
+                favoriteNameList.includes(pokeData?.name)
+                  ? updateDoc("dislike", pokeData?.name)
+                  : updateDoc("like", pokeData?.name);
               }}
-              handleViewDetail={() => navigate("/pokemon/" + pokeData.name)}
+              handleViewDetail={() => navigate("/pokemon/" + pokeData?.name)}
             />
           ))}
         </CarouselList>

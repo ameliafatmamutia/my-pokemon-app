@@ -3,32 +3,38 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import PokemonCardList from "./PokemonCardList";
 import { useInfiniteQuery } from "react-query";
 import LoadingSkeletonCard from "../loader/LoadingSkeletonCard";
+import { toast } from "react-hot-toast";
 
 function PokemonCardScrollable() {
   const getPokemons = async ({ pageParam = 1 }) => {
-    const res = await fetch(
-      `https://pokeapi.co/api/v2/pokemon/?offset=${
-        (pageParam - 1) * 20
-      }&limit=20`
-    );
-    if (!res.ok) {
-      throw new Error("Failed to fetch data");
+    try {
+      const res = await fetch(
+        `https://pokeapi.co/api/v2/pokemon/?offset=${
+          (pageParam - 1) * 20
+        }&limit=20`
+      );
+      if (!res.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      const data = await res.json();
+      const dataWithImage = await Promise.all(
+        data?.results.map(async (element) => {
+          const resIndividual = await fetch(element.url);
+          const jsoner = await resIndividual.json();
+          return {
+            ...element,
+            image:
+              jsoner.sprites.other.dream_world.front_default ||
+              jsoner.sprites.other.home.front_default ||
+              jsoner.sprites.other["official-artwork"].front_default,
+          };
+        })
+      );
+      return { ...data, results: dataWithImage };
+    } catch (error) {
+      toast.error('Error get homepage data')
     }
-    const data = await res.json();
-    const dataWithImage = await Promise.all(
-      data?.results.map(async (element) => {
-        const resIndividual = await fetch(element.url);
-        const jsoner = await resIndividual.json();
-        return {
-          ...element,
-          image:
-            jsoner.sprites.other.dream_world.front_default ||
-            jsoner.sprites.other.home.front_default ||
-            jsoner.sprites.other["official-artwork"].front_default,
-        };
-      })
-    );
-    return { ...data, results: dataWithImage };
+    
   };
 
   const { data, fetchNextPage, hasNextPage, isError } =
