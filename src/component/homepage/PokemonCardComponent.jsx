@@ -50,20 +50,20 @@ const PokemonCardComponent = ({ data, isFavorite }) => {
         </p>
   
         <div className="flex items-center">
-          <div className="bg-customButton rounded-full">
-            <button className="p-2 rounded-md">
+          <div className="bg-customButton rounded-full px-5">
+            <button className="p-1 rounded-md">
               <HeartIcon
                 onClick={() => {
                   tempIsFavorite ? updateDoc("dislike") : updateDoc("like");
                 }}
-                className={`w-6 h-6 ${
+                className={`w-4 h-4 ${
                   tempIsFavorite ? "text-red-500" : "text-white"
                 } hover:cursor-pointer`}
               />
             </button>
-            <button className="p-2 rounded-md">
+            <button className="p-1 rounded-md">
               <InformationCircleIcon
-                className="w-6 h-6 text-white"
+                className="w-4 h-4 text-white"
                 onClick={() => navigate(`/pokemon/${data.name}`)}
               />
             </button>

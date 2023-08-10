@@ -83,8 +83,12 @@ function FavoriteList() {
   };
 
   return (
-    <div className="bg-slate-300 min-h-screen">
-      <div className="mx-auto max-w-2xl py-1 px-4 sm:py-8 sm:px-6 md:max-w-4xl md:px-6 md:py-6 lg:max-w-7xl lg:px-8">
+    <div className="bg-slate-100 min-h-screen ">
+      <div className="py-3 px-4 sm:px-6 md:px-6 lg:px-8">
+        <p className="text-xl font-semibold">Favorites</p>
+      </div>
+      <div className="mx-auto max-w-2xl px-4 sm:py-8 sm:px-6 md:max-w-4xl md:px-6 md:py-6 lg:max-w-7xl lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-x-4">
         {isLoading && (
           <div>
             <SkeletonLoadingDetail />
@@ -103,8 +107,9 @@ function FavoriteList() {
             handleViewDetail={() => navigate("/pokemon/" + pokeData.name)}
           />
         ))}
-        <div className="flex items-center">
-          <p className="text-black text-2xl">{`Total favorite pokemon : ${favoriteCount}`}</p>
+        </div>       
+        <div className="flex justify-center items-center mt-5">
+          <p className="text-black text-xl">{`Total favorite pokemon: ${favoriteCount}`}</p>
         </div>
       </div>
       <FloatingActionButton

@@ -83,49 +83,48 @@ function PokemonDetail() {
     fetchPokemonDetail();
   }, []);
   return (
-    <div className="bg-slate-300 min-h-screen">
+    <div className="bg-slate-100 min-h-screen">
       <div className="mx-auto max-w-2xl py-1 px-4 sm:py-8 sm:px-6 md:max-w-4xl md:px-6 md:py-6 lg:max-w-7xl lg:px-8">
         <div className="flex border-b-2 border-black">
           <ChevronLeftIcon
             className="h-10 w-10 hover:cursor-pointer"
             onClick={() => navigate("/")}
           />
-          <p className="text-xl p-2">{capitalCase(pokeData.name || "")}</p>
+          <p className="text-xl font-semibold p-2">{(pokeData.name || "")}</p>
         </div>
 
         {isLoading ? (
           <SkeletonLoadingDetail />
         ) : (
           <>
-            <div className="h-[240px] bg-customCard my-10 p-2 rounded-xl overflow-hidden">
+            <div className="h-[155px] bg-customCard my-2 rounded-xl flex flex-row justify-around items-center">
               <div className="flex items-center">
                 <img
                   src={pokeData.image || pokeball}
                   alt={pokeData.name}
-                  className="w-24 h-24 md:w-48 md:h-48 m-4 border-gray-500 pr-4"
+                  className="border-gray-500 border-r-2 w-[100px] h-[100px] md:w-[130px] md:h-[130px] pr-5"
                 />
-                <div className="border-l-2 p-2 flex flex-col justify-start px-4 overflow-x-auto">
-                  <p className="text-xl font-semibold text-white">
-                    {capitalCase(pokeData.name || "")}
+                <div className="p-2 flex flex-col justify-start pl-7">
+                  <p className="text-[12px] font-semibold text-white">
+                    {(pokeData.name || "")}
                   </p>
-                  <ul className="mt-2 text-white">
-                    <li className="whitespace-nowrap mb-1">
-                      Height: {pokeData.height}
+                  <ul className="mt-2 text-white text-[10px]">
+                    <li className="whitespace-nowrap">
+                      height: {pokeData.height}
                     </li>
-                    <li className="whitespace-nowrap mb-1">
-                      Weight: {pokeData.weight}
+                    <li className="whitespace-nowrap">
+                      weight: {pokeData.weight}
                     </li>
-                    <li className="whitespace-nowrap mb-1">
-                      Abilities:{" "}
+                    <li className="whitespace-nowrap">
+                      abilities:{" "}
                       {pokeData?.abilities?.map(
-                        (ability) =>
-                          sentenceCase(ability.ability.name || "") + ", "
+                        (ability) => (ability.ability.name || "") + ", "
                       )}
                     </li>
                     <li className="whitespace-nowrap">
-                      Types:{" "}
+                      types:{" "}
                       {pokeData?.types?.map(
-                        (type) => sentenceCase(type.type.name || "") + ", "
+                        (type) => (type.type.name || "") + ", "
                       )}
                     </li>
                   </ul>
@@ -143,13 +142,13 @@ function PokemonDetail() {
               </div>
             </div>
 
-            <div className="flex border-b-2 border-black">
-              <p className="text-2xl font-semibold p-2">Stats : </p>
+            <div className="flex border-b-2 border-black mt-5 mb-1">
+              <p className="text-xl font-semibold">Stats</p>
             </div>
             {pokeData?.stats?.map((stat) => (
               <PercentageBar
                 key={`barpercentage-${stat.stat.name}`}
-                skillName={sentenceCase(stat.stat.name || "")}
+                skillName={(stat.stat.name || "")}
                 percentage={stat?.base_stat}
               />
             ))}

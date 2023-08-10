@@ -35,7 +35,7 @@ const PokemonCardList = ({ pokemonData }) => {
     };
   
     return (
-      <div className="grid grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-3 sm:gap-x-6 sm:gap-y-8 lg:grid-cols-4 lg:gap-x-6">
+      <div className="grid grid-cols-2 gap-x-2 gap-y-4 sm:grid-cols-4 sm:gap-x-4 sm:gap-y-8 lg:grid-cols-5">
         {pokemonData.map((data) => (
           <PokemonCardComponent
             data={data}

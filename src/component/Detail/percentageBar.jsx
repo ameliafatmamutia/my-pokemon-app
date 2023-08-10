@@ -6,9 +6,9 @@ const ProgressBar = ({ skillName, percentage }) => {
   };
 
   return (
-    <div className="flex items-center my-4">
-      <div className="w-1/5 mr-4 font-semibold">{skillName} :</div>
-      <div className="w-4/5 h-6 bg-customCard">
+    <div className="flex items-center my-4 text-xs">
+      <div className="w-2/5 mr-4 font-semibold">{skillName} :</div>
+      <div className="ml-10 w-3/5 h-[10px] bg-customCard">
         <div className="h-full bg-orange-500" style={progressBarStyle} />
       </div>
       <p className="ml-4">  {percentage}%</p>

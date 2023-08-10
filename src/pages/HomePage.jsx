@@ -12,8 +12,8 @@ function HomePage() {
   };
 
   return (
-    <div className="bg-slate-300 min-h-screen">
-      <div className="mx-auto max-w-2xl py-1 px-6 sm:py-8 sm:px-6 md:max-w-4xl md:px-6 lg:max-w-7xl lg:px-8 md:py-6">
+    <div className="bg-slate-100 min-h-screen">
+      <div className="mx-auto max-w-2xl py-5 px-6 sm:py-8 sm:px-6 md:max-w-4xl md:px-6 lg:max-w-7xl lg:px-8 md:py-6">
         <HightlightPokemon/>
         <PokemonCardScrollable/>
         <FloatingActionButton

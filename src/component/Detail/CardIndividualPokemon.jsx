@@ -22,18 +22,18 @@ function CardIndividualPokemon({
             {capitalCase(data.name || "")}
           </p>
           <ul className="mt-2 text-white text-[10px]">
-            <li className="whitespace-nowrap">Height: {data.height}</li>
-            <li className="whitespace-nowrap">Weight: {data.weight}</li>
+            <li className="whitespace-nowrap">height: {data.height}</li>
+            <li className="whitespace-nowrap">weight: {data.weight}</li>
             <li className="whitespace-nowrap">
-              Abilities:{" "}
+              abilities:{" "}
               {data?.abilities?.map(
-                (ability) => sentenceCase(ability.ability.name || "") + ", "
+                (ability) => (ability.ability.name || "") + ", "
               )}
             </li>
             <li className="whitespace-nowrap">
-              Types:{" "}
+              types:{" "}
               {data?.types?.map(
-                (type) => sentenceCase(type.type.name || "") + ", "
+                (type) => (type.type.name || "") + ", "
               )}
             </li>
           </ul>
