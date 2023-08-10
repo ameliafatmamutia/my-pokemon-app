@@ -60,7 +60,7 @@ function PokemonDetail() {
       const jsonData = await dataDetail.json();
       const pokeData = {
         name: jsonData.name,
-        abilities: jsonData.abilities, //Array of abilities
+        abilities: jsonData.abilities, 
         stats: jsonData.stats,
         image:
           jsonData.sprites.other.dream_world.front_default ||
