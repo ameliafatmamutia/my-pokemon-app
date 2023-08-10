@@ -17,7 +17,7 @@ function CardIndividualPokemon({
           alt={data?.name}
           className="w-[70px] h-[70px] md:w-[130px] md:h-[130px] m-4 justify-end"
         />
-        <div className="p-2 flex flex-col justify-start px-4 w-[200px] overflow-auto ">
+        <div className="p-2 flex flex-col justify-start px-4 w-[200px]">
           <p className="text-[12px] font-semibold text-white">
             {capitalCase(data?.name || "")}
           </p>
